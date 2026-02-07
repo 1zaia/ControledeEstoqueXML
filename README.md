@@ -1,10 +1,10 @@
-📦 XML NFe Stock Processor (KG)
+#📦 XML NFe Stock Processor (KG)
 
 A simple Python tool that reads Brazilian NFe XML files, extracts product quantities, and generates Excel spreadsheets for daily movement and cumulative stock in KG.
 
 The script separates XMLs into entry and exit flows, updates stock balances automatically, and keeps track of already processed invoices to avoid double counting. It is designed to run locally with minimal setup.
 
-🚀 What This Project Does
+#🚀 What This Project Does
 
 Reads NFe XML files from folders
 
@@ -26,7 +26,7 @@ Logs errors without stopping execution
 
 Displays a completion popup when finished
 
-🧠 Processing Logic
+#🧠 Processing Logic
 
 For each XML file:
 
@@ -58,7 +58,7 @@ Stock formula:
 
 stock = previous_stock + total_entries − total_exits
 
-📁 Folder Structure
+#📁 Folder Structure
 
 Folders are created automatically when the script runs:
 
@@ -71,7 +71,7 @@ Folders are created automatically when the script runs:
 /resultado → Generated Excel files
 /erros → Error logs
 
-📊 Generated Files
+#📊 Generated Files
 
 Daily Movement File (created on each execution with timestamp):
 
@@ -111,7 +111,7 @@ resultado/processadas.xlsx
 
 Stores processed NFe keys to ensure idempotent behavior.
 
-▶️ How to Run
+#▶️ How to Run
 
 Install dependencies:
 
@@ -140,7 +140,7 @@ Errors (if any) are logged
 
 A completion popup is shown
 
-⚠️ Error Handling
+#⚠️ Error Handling
 
 If an XML cannot be parsed or required fields are missing:
 
@@ -150,7 +150,7 @@ A log file is created in /erros
 
 The log contains filename and exception details
 
-🔁 Idempotent Behavior
+#🔁 Idempotent Behavior
 
 Each invoice is identified by its NFe key (chNFe).
 
@@ -162,7 +162,7 @@ It is moved to the processed folder
 
 It does not affect stock calculations again
 
-🛠️ Tech Stack
+#🛠️ Tech Stack
 
 Python 3
 
