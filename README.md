@@ -1,175 +1,68 @@
-#📦 XML NFe Stock Processor (KG)
-
-A simple Python tool that reads Brazilian NFe XML files, extracts product quantities, and generates Excel spreadsheets for daily movement and cumulative stock in KG.
-
-The script separates XMLs into entry and exit flows, updates stock balances automatically, and keeps track of already processed invoices to avoid double counting. It is designed to run locally with minimal setup.
-
-#🚀 What This Project Does
-
-Reads NFe XML files from folders
-
-Extracts product data from each invoice item
-
-Classifies movements as Entry or Exit
-
-Calculates quantity impact on stock (KG)
-
-Generates a daily movement spreadsheet per run
-
-Maintains an updated cumulative stock spreadsheet
-
-Prevents reprocessing of the same invoice
-
-Moves processed XMLs to archive folders
-
-Logs errors without stopping execution
-
-Displays a completion popup when finished
-
-#🧠 Processing Logic
-
-For each XML file:
-
-Read the NFe key (chNFe)
-
-Skip file if the key was already processed
-
-Iterate through invoice items (det/prod nodes)
-
-Extract:
-
-Product code (cProd)
-
-Product description (xProd)
-
-Commercial quantity (qCom)
-
-Apply movement factor:
-
-Entry = +1
-
-Exit = -1
-
-Record movements
-
-Update cumulative stock totals
-
-Stock formula:
-
-stock = previous_stock + total_entries − total_exits
-
-#📁 Folder Structure
-
-Folders are created automatically when the script runs:
-
-/entrada → Entry XML files
-/saida → Exit XML files
-
-/processados/entrada → Processed entry XMLs
-/processados/saida → Processed exit XMLs
-
-/resultado → Generated Excel files
-/erros → Error logs
-
-#📊 Generated Files
-
-Daily Movement File (created on each execution with timestamp):
-
-resultado/movimento_YYYY-MM-DD_HH-MM-SS.xlsx
-
-Columns:
-
-Date — Processing date
-
-Type — Entry or Exit
-
-Codigo — Product code
-
-Produto — Product name
-
-Quantidade_KG — Quantity impact (signed)
-
-chNFe — Invoice key
-
-Arquivo_XML — Source filename
-
-Cumulative Stock File (continuously updated):
-
-resultado/estoque_geral.xlsx
-
-Columns:
-
-Codigo — Product code
-
-Produto — Product name
-
-Estoque_KG — Current stock balance
-
-Processed Invoice Registry:
-
-resultado/processadas.xlsx
-
-Stores processed NFe keys to ensure idempotent behavior.
-
-#▶️ How to Run
-
-Install dependencies:
-
-pip install pandas openpyxl
-
-Tkinter is typically included with standard Python installations.
-
-Place XML files into the folders:
-
-/entrada
-/saida
-
-Run the script:
-
-python main.py
-
-After execution:
-
-Movement spreadsheet is generated
-
-Stock spreadsheet is updated
-
-XMLs are moved to processed folders
-
-Errors (if any) are logged
-
-A completion popup is shown
-
-#⚠️ Error Handling
-
-If an XML cannot be parsed or required fields are missing:
-
-Processing continues for other files
-
-A log file is created in /erros
-
-The log contains filename and exception details
-
-#🔁 Idempotent Behavior
-
-Each invoice is identified by its NFe key (chNFe).
-
-If the key already exists in the processed registry:
-
-The XML is skipped
-
-It is moved to the processed folder
-
-It does not affect stock calculations again
-
-#🛠️ Tech Stack
-
-Python 3
-
-pandas
-
-openpyxl
-
-xml.etree.ElementTree
-
-tkinter
+**Controle de Estoque — NFe XML (KG)**
+
+Ferramenta em Python para ler arquivos XML de NFe e gerar relatórios de movimentação e estoque em Excel.
+
+**Funcionalidades**
+- Lê arquivos XML de NFe (entrada/saída)
+- Extrai código do produto, descrição e quantidade (qCom)
+- Classifica movimento como Entrada (+) ou Saída (−)
+- Gera relatório diário de movimentos em Excel
+- Mantém arquivo de estoque acumulado
+- Evita processamento duplicado de notas (por chNFe)
+- Armazena XMLs processados e logs de erro
+
+**Pré-requisitos**
+- Python 3.8+
+- Instalar dependências:
+
+  pip install pandas openpyxl
+
+Tkinter costuma vir com a instalação padrão do Python.
+
+**Como usar**
+1. Coloque os arquivos XML nas pastas apropriadas:
+   - entrada/ — arquivos de entrada
+   - saida/   — arquivos de saída
+2. Execute o script principal:
+
+   python ControleEstoqueXML.py
+
+3. Os arquivos processados serão movidos para a pasta de `processados/` e os resultados ficarão em `resultado/`.
+
+**Estrutura de pastas (auto-criada)**
+- entrada/ — arquivos XML de entrada
+- saida/ — arquivos XML de saída
+- processados/
+  - entrada/ — XMLs de entrada processados
+  - saida/   — XMLs de saída processados
+- resultado/ — arquivos Excel gerados
+- erros/ — logs de erros
+
+**Saídas geradas**
+- `resultado/movimento_TIMESTAMP.xlsx` — relatório de movimentação do dia
+- `resultado/estoque_geral.xlsx` — saldo acumulado por produto
+- `resultado/processadas.xlsx` — registro de chNFe processadas (para idempotência)
+
+Colunas típicas do relatório de movimento:
+- Data — data do processamento
+- Tipo — Entrada / Saída
+- Codigo — código do produto
+- Produto — descrição
+- Quantidade_KG — quantidade com sinal (+/-)
+- chNFe — chave da nota fiscal
+- Arquivo_XML — arquivo-fonte
+
+**Regras de processamento**
+- Para cada XML lido: extrai `chNFe`. Se já estiver em `processadas`, o arquivo é ignorado.
+- Percorre os itens em `det/prod` e extrai `cProd`, `xProd` e `qCom`.
+- Aplica fator de movimento: Entrada = +1, Saída = −1. Quantidade final = qCom × fator.
+
+**Tratamento de erros**
+- Se um arquivo falhar ao ser parseado ou estiver faltando tags, o processamento continua.
+- É criado um log em `erros/` com o nome do arquivo e a mensagem de exceção.
+
+**Observações**
+- Garanta que os XMLs estejam bem formados e na codificação correta.
+- Ajuste unidades e conversões se necessário (este projeto considera KG por padrão).
+
+Se quiser, eu adapto o texto (ex.: inglês, instruções de instalação com `requirements.txt`, ou exemplos de execução). 
